@@ -8,6 +8,8 @@
     <script src="lib/colorbrewer.js"></script>
     <script src="lib/topojson.js"></script>
     <script src="cartogram.js"></script>
+    <script src="lib/colorbar.js"></script>
+
     <style type="text/css">
 
       body {
@@ -90,44 +92,37 @@
   </head>
   <body>
     <div id="container">
-      <h1>Cartograms with d3 &amp; TopoJSON</h1>
+      <h1>Art related Cartograms with d3 &amp; TopoJSON</h1>
       <form>
         <p>
-          <label>Scale by <select id="field"></select></label>
-          <label>in <select id="year"></select></label>
+          <label>Scale by <select id="field"></select></label><label> <select id="year"></select></label>
+
           <span id="status"></span>
         </p>
       </form>
       <div id="map-container">
         <img id="placeholder" alt="placeholder image for old browsers" src="placeholder.png">
         <svg id="map"></svg>
-      </div>
-      <div id="about">
-        <h2>About</h2>
-        <p><a href="cartogram.js">cartogram.js</a> is a JavaScript implementation of
-        <a href="http://lambert.nico.free.fr/tp/biblio/Dougeniketal1985.pdf">an algoritm to construct continuous area cartograms</a>,
-        by James A. Dougenik, Nicholas R. Chrisman and Duane R. Niemeyer,
-        &copy;1985 by the Association of American Geographers. This example combines
-        <a href="http://github.com/mbostock/topojson">TopoJSON</a>-encoded 
-        boundaries of the United States from
-        <a href="http://www.naturalearthdata.com/downloads/110m-cultural-vectors/">Natural Earth</a>
-        with
-        <a href="http://www.census.gov/popest/data/state/totals/2011/">2011 US Census population estimates</a>
-        to size each state proportionally.</p>
         
-        <p>There&rsquo;s also a
-        <a class="hashish" href="?segmentized">segmentized topology</a>,
-        which distorts the shapes more fluidly than the
-        <a class="hashish" href="?">original</a>.</p>
-
-        <p>Designed and built by <a href="http://stamen.com/studio/shawn">Shawn Allen</a> at
-        <a href="http://stamen.com">Stamen</a>. But
-        <a href="http://d3js.org">d3.js</a> does most of the heavy lifting;
-        colors by <a href="http://colorbrewer2.org">colorbrewer</a>.</p>
+      </div>
+      <div>
+      <svg id="colorbar-here" width=1000 height=90 margin=50></svg>
+      </div>
+ 
+ 
+    <div id="container1">
+      <form>
+        <p>
+          <label>Scale by <select id="field1"></select></label>
+          <span id="status1"></span>
+        </p>
+      <div id="map-container1">
+        <img id="placeholder1" alt="placeholder image for old browsers" src="placeholder.png">
+        <svg id="map1"></svg>
       </div>
 
-      <a href="https://github.com/shawnbot/d3-cartogram/"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
-    </div>
+      
+
     <script>
 
       // hide the form if the browser doesn't do SVG,
@@ -143,36 +138,26 @@
             return function(n) { return fmt(n) + "%"; };
           })(),
           fields = [
-            {name: "(no scale)", id: "none"},
-            // {name: "Census Population", id: "censuspop", key: "CENSUS%dPOP", years: [2010]},
+             //{name: "Census Population", id: "censuspop", key: "CENSUS%sPOP", years: ["2010","2011"]},
             // {name: "Estimate Base", id: "censuspop", key: "ESTIMATESBASE%d", years: [2010]},
-            {name: "Population Estimate", id: "popest", key: "POPESTIMATE%d"},
-            {name: "Population Change", id: "popchange", key: "NPOPCHG_%d", format: "+,"},
-            {name: "Births", id: "births", key: "BIRTHS%d"},
-            {name: "Deaths", id: "deaths", key: "DEATHS%d"},
-            {name: "Natural Increase", id: "natinc", key: "NATURALINC%d", format: "+,"},
-            {name: "Int'l Migration", id: "intlmig", key: "INTERNATIONALMIG%d", format: "+,"},
-            {name: "Domestic Migration", id: "domesticmig", key: "DOMESTICMIG%d", format: "+,"},
-            {name: "Net Migration", id: "netmig", key: "NETMIG%d", format: "+,"},
-            {name: "Residual", id: "residual", key: "RESIDUAL%d", format: "+,"},
-            {name: "Birth Rate", id: "birthrate", key: "RBIRTH%d", years: [2011], format: percent},
-            {name: "Death Rate", id: "deathrate", key: "RDEATH%d", years: [2011], format: percent},
-            {name: "Natural Increase Rate", id: "natincrate", key: "RNATURALINC%d", years: [2011], format: percent},
-            {name: "Int'l Migration Rate", id: "intlmigrate", key: "RINTERNATIONALMIG%d", years: [2011], format: percent},
-            {name: "Net Domestic Migration Rate", id: "domesticmigrate", key: "RDOMESTICMIG%d", years: [2011], format: percent},
-            {name: "Net Migration Rate", id: "netmigrate", key: "RNETMIG%d", years: [2011], format: percent},
+            {name: "Population Estimate", id: "popest", key: "POPESTIMATE2010", years:[]},
+            {name: "Art Museums'", id: "artmus", key: "ArtMuseum%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            //{name: "ArtMuseumRevenue", id: "artrevenue", key: "ArtMuseumRevenue", format: "+,"},
+            //{name: "ArtMuseumAssets", id: "artassets", key: "ArtMuseumAssets", format: "+,"},
+            //{name: "ArtMuseumGovtGrants", id: "artgov", key: "ArtMuseumGovtGrants", format: "+,"},
+            //{name: "ArtMuseumContributions", id: "artcont", key: "ArtMuseumContributions", format: "+,"},
+
           ],
-          years = [2010, 2011],
+          years = ["Expenses", "Revenue","Assets","GovtGrants","Contributions"],
           fieldsById = d3.nest()
             .key(function(d) { return d.id; })
             .rollup(function(d) { return d[0]; })
             .map(fields),
           field = fields[0],
           year = years[0],
-          colors = colorbrewer.RdYlBu[3]
-            .reverse()
+          colors = colorbrewer.OrRd[3] //.reverse()
             .map(function(rgb) { return d3.hsl(rgb); });
-
+            
       var body = d3.select("body"),
           stat = d3.select("#status");
 
@@ -192,7 +177,10 @@
       var yearSelect = d3.select("#year")
         .on("change", function(e) {
           year = years[this.selectedIndex];
+            //console.log(year);
+
           location.hash = "#" + [field.id, year].join("/");
+            //console.log(location.hash)
         });
 
       yearSelect.selectAll("option")
@@ -238,7 +226,7 @@
               return +d.properties[field];
             });
 
-      window.onhashchange = function() {
+    window.onhashchange = function() {
         parseHash();
       };
 
@@ -246,9 +234,12 @@
           url = ["data",
             segmentized ? "us-states-segmentized.topojson" : "us-states.topojson"
           ].join("/");
+          //console.log(url);
+
       d3.json(url, function(topo) {
         topology = topo;
         geometries = topology.objects.states.geometries;
+              //console.log(geometries);
         d3.csv("data/nst_2011.csv", function(data) {
           rawData = data;
           dataById = d3.nest()
@@ -260,10 +251,13 @@
       });
 
       function init() {
+          //console.log(geometries)
+
         var features = carto.features(topology, geometries),
             path = d3.geo.path()
               .projection(proj);
-
+              //LMS: Over here we have the raw coordinates in the feature vector.
+              //console.log(features)
         states = states.data(features)
           .enter()
           .append("path")
@@ -286,7 +280,6 @@
         var features = carto.features(topology, geometries),
             path = d3.geo.path()
               .projection(proj);
-
         states.data(features)
           .transition()
             .duration(750)
@@ -304,7 +297,7 @@
         var start = Date.now();
         body.classed("updating", true);
 
-        var key = field.key.replace("%d", year),
+        var key = field.key.replace("%s", year),
             fmt = (typeof field.format === "function")
               ? field.format
               : d3.format(field.format || ","),
@@ -319,7 +312,7 @@
               .sort(d3.ascending),
             lo = values[0],
             hi = values[values.length - 1];
-
+        
         var color = d3.scale.linear()
           .range(colors)
           .domain(lo < 0
@@ -336,10 +329,50 @@
           return scale(value(d));
         });
 
+        
+        
+        // add the legend now
+        //Version 1
+        colorbar = Colorbar()
+            .origin([0,0])
+            .thickness(20)
+            .barlength(1000)
+            .margin({top: 5, right: 30, bottom: 60, left: 0})
+            .orient("horizontal")
+            .scale(color)
+            
+
+        placeholder = "#colorbar-here"
+
+        colorbarObject = d3.select(placeholder)
+            .call(colorbar)
+        /*//Append a defs (for definition) element to your SVG
+        svg = d3.select("#colorbar-here")
+           
+        var defs = svg.append("defs");
+
+        //Append a linearGradient element to the defs and give it a unique id
+        var linearGradient = defs.append("linearGradient")
+            .attr("id", "colorbar-here");
+            
+        linearGradient.selectAll("stop")
+        .data( color.range() )
+        .enter().append("stop")
+        .attr("offset", function(d,i) { return i/(color.range().length-1); })
+        .attr("stop-color", function(d) { return d; });
+              
+         svg.append("rect")
+         .attr("width", 300)
+         .attr("height", 20)
+         .style("fill", "url(#colorbar-here)");*/
+         
+         
+            
         // generate the new features, pre-projected
         var features = carto(topology, geometries).features;
-
         // update the data
+        //console.log(features)
+
         states.data(features)
           .select("title")
             .text(function(d) {
@@ -357,6 +390,7 @@
         var delta = (Date.now() - start) / 1000;
         stat.text(["calculated in", delta.toFixed(1), "seconds"].join(" "));
         body.classed("updating", false);
+
       }
 
       var deferredUpdate = (function() {
@@ -379,7 +413,7 @@
       function parseHash() {
         var parts = location.hash.substr(1).split("/"),
             desiredFieldId = parts[0],
-            desiredYear = +parts[1];
+            desiredYear = parts[1];
 
         field = fieldsById[desiredFieldId] || fields[0];
         year = (years.indexOf(desiredYear) > -1) ? desiredYear : years[0];
@@ -420,5 +454,41 @@
       }
 
     </script>
+    
+ 
+ 
+ 
+
+
+      
+      <div id="about">
+        <h2>About</h2>
+        <p> Created by the BarabasiLab based on previous code developed Shawn Allen at Stamen.</p>
+        <!--<p><a href="cartogram.js">cartogram.js</a> is a JavaScript implementation of
+        <a href="http://lambert.nico.free.fr/tp/biblio/Dougeniketal1985.pdf">an algoritm to construct continuous area cartograms</a>,
+        by James A. Dougenik, Nicholas R. Chrisman and Duane R. Niemeyer,
+        &copy;1985 by the Association of American Geographers.
+        This example combines
+        <a href="http://github.com/mbostock/topojson">TopoJSON</a>-encoded
+        boundaries of the United States from
+        <a href="http://www.naturalearthdata.com/downloads/110m-cultural-vectors/">Natural Earth</a>
+        with
+        <a href="http://www.census.gov/popest/data/state/totals/2011/">2011 US Census population estimates</a>
+        to size each state proportionally.</p>
+        
+        <p>There&rsquo;s also a
+        <a class="hashish" href="?segmentized">segmentized topology</a>,
+        which distorts the shapes more fluidly than the
+        <a class="hashish" href="?">original</a>.</p>
+
+        <p>Designed and built by <a href="http://stamen.com/studio/shawn">Shawn Allen</a> at
+        <a href="http://stamen.com">Stamen</a>. But
+        <a href="http://d3js.org">d3.js</a> does most of the heavy lifting;
+        colors by <a href="http://colorbrewer2.org">colorbrewer</a>.</p>-->
+      </div>
+
+      <!--<a href="https://github.com/shawnbot/d3-cartogram/"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>-->
+    </div>
+    
   </body>
 </html>
