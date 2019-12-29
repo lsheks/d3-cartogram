@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Cartograms with d3 &amp; TopoJSON</title>
+    <title> Arts &amp; Culture Funding Cartograms </title>
     <meta charset="utf-8">
     <meta property="og:image" content="placeholder.png">
     <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -49,6 +49,7 @@
 
       #map-container {
         height: 500px;
+        width: 1000px;
         text-align: center;
         position: relative;
         margin: 20px 0;
@@ -87,12 +88,45 @@
         left: 0;
         top: 0;
       }
+    
+    #container1 {
+      width: 800px;
+      margin: 20px auto;
+    }
+    #placeholder1 {
+      z-index: -1;
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    #map-container1 {
+      height: 500px;
+      width: 1000px;
+
+      text-align: center;
+      position: relative;
+      margin: 20px 0;
+    }
+
+    #map1 {
+      display: block;
+      position: absolute;
+      background: #fff;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+
+
+    }
 
     </style>
   </head>
+  
   <body>
     <div id="container">
-      <h1>Art related Cartograms with d3 &amp; TopoJSON</h1>
+      <h1>Arts &amp; Culture Cartograms</h1>
       <form>
         <p>
           <label>Scale by <select id="field"></select></label><label> <select id="year"></select></label>
@@ -106,21 +140,8 @@
         
       </div>
       <div>
-      <svg id="colorbar-here" width=1000 height=90 margin=50></svg>
+      <svg id="colorbar-here" width=1000 height=90 margin=70></svg>
       </div>
- 
- 
-    <div id="container1">
-      <form>
-        <p>
-          <label>Scale by <select id="field1"></select></label>
-          <span id="status1"></span>
-        </p>
-      <div id="map-container1">
-        <img id="placeholder1" alt="placeholder image for old browsers" src="placeholder.png">
-        <svg id="map1"></svg>
-      </div>
-
       
 
     <script>
@@ -141,7 +162,23 @@
              //{name: "Census Population", id: "censuspop", key: "CENSUS%sPOP", years: ["2010","2011"]},
             // {name: "Estimate Base", id: "censuspop", key: "ESTIMATESBASE%d", years: [2010]},
             {name: "Population Estimate", id: "popest", key: "POPESTIMATE2010", years:[]},
-            {name: "Art Museums'", id: "artmus", key: "ArtMuseum%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "All Arts&Culture", id: "allart", key: "All%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+
+            {name: "All Museum", id: "allmus", key: "Museum%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Art Museum", id: "artmus", key: "ArtMuseum%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Children Museum", id: "childmus", key: "ChildrenMuseum%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "History Museum", id: "histmus", key: "HistoryMuseum%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Performing Arts", id: "perfarts", key: "PerformingArts%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Dance", id: "dance", key: "Dance%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Ballet", id: "ballet", key: "Ballet%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Theater", id: "theater", key: "Theater%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Opera", id: "opera", key: "Opera%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Symphony Orchestra", id: "symph", key: "SymphonyOrchestra%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Media", id: "media", key: "Media%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Film", id: "film", key: "Film%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Television", id: "tv", key: "Television%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Publishing", id: "pub", key: "Publishing%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Radio", id: "radio", key: "Radio%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
             //{name: "ArtMuseumRevenue", id: "artrevenue", key: "ArtMuseumRevenue", format: "+,"},
             //{name: "ArtMuseumAssets", id: "artassets", key: "ArtMuseumAssets", format: "+,"},
             //{name: "ArtMuseumGovtGrants", id: "artgov", key: "ArtMuseumGovtGrants", format: "+,"},
@@ -240,7 +277,7 @@
         topology = topo;
         geometries = topology.objects.states.geometries;
               //console.log(geometries);
-        d3.csv("data/nst_2011.csv", function(data) {
+        d3.csv("data/nst_2011-new.csv", function(data) {
           rawData = data;
           dataById = d3.nest()
             .key(function(d) { return d.NAME; })
@@ -336,8 +373,8 @@
         colorbar = Colorbar()
             .origin([0,0])
             .thickness(20)
-            .barlength(1000)
-            .margin({top: 5, right: 30, bottom: 60, left: 0})
+            .barlength(900)
+            .margin({top: 20, right: 40, bottom: 60, left: 30})
             .orient("horizontal")
             .scale(color)
             
@@ -453,42 +490,404 @@
         }
       }
 
+
+    
+    
     </script>
     
- 
- 
- 
 
-
-      
-      <div id="about">
-        <h2>About</h2>
-        <p> Created by the BarabasiLab based on previous code developed Shawn Allen at Stamen.</p>
-        <!--<p><a href="cartogram.js">cartogram.js</a> is a JavaScript implementation of
-        <a href="http://lambert.nico.free.fr/tp/biblio/Dougeniketal1985.pdf">an algoritm to construct continuous area cartograms</a>,
-        by James A. Dougenik, Nicholas R. Chrisman and Duane R. Niemeyer,
-        &copy;1985 by the Association of American Geographers.
-        This example combines
-        <a href="http://github.com/mbostock/topojson">TopoJSON</a>-encoded
-        boundaries of the United States from
-        <a href="http://www.naturalearthdata.com/downloads/110m-cultural-vectors/">Natural Earth</a>
-        with
-        <a href="http://www.census.gov/popest/data/state/totals/2011/">2011 US Census population estimates</a>
-        to size each state proportionally.</p>
+  
+  
+  
+  
+    <div id="container1">
+      <form>
+        <p>
+          <label>Scale by <select id="field1"></select></label><label> <select id="year1"></select></label>
+          <span id="status1"></span>
+        </p>
+      </form>
+      <div id="map-container1">
         
-        <p>There&rsquo;s also a
-        <a class="hashish" href="?segmentized">segmentized topology</a>,
-        which distorts the shapes more fluidly than the
-        <a class="hashish" href="?">original</a>.</p>
-
-        <p>Designed and built by <a href="http://stamen.com/studio/shawn">Shawn Allen</a> at
-        <a href="http://stamen.com">Stamen</a>. But
-        <a href="http://d3js.org">d3.js</a> does most of the heavy lifting;
-        colors by <a href="http://colorbrewer2.org">colorbrewer</a>.</p>-->
+        <svg id="map1"></svg>
+        
       </div>
+      <div>
+      <svg id="colorbar-here1" width=1000 height=90 margin=50></svg>
+      </div>
+      
 
-      <!--<a href="https://github.com/shawnbot/d3-cartogram/"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>-->
-    </div>
+    <script>
+
+      // hide the form if the browser doesn't do SVG,
+      // (then just let everything else fail)
+      if (!document.createElementNS) {
+        document.getElementsByTagName("form")[0].style.display = "none";
+      }
+
+      // field definitions from:
+      // <http://www.census.gov/popest/data/national/totals/2011/files/NST-EST2011-alldata.pdf>
+      var percent = (function() {
+            var fmt = d3.format(".2f");
+            return function(n) { return fmt(n) + "%"; };
+          })(),
+          fields1 = [
+             //{name: "Census Population", id: "censuspop", key: "CENSUS%sPOP", years: ["2010","2011"]},
+            // {name: "Estimate Base", id: "censuspop", key: "ESTIMATESBASE%d", years: [2010]},
+            {name: "Population Estimate", id: "popest", key: "POPESTIMATE2010", years1:[]},
+            {name: "All Arts&Culture", id: "allart", key: "All%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+
+            {name: "All Museum", id: "allmus", key: "Museum%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Art Museum", id: "artmus", key: "ArtMuseum%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Children Museum", id: "childmus", key: "ChildrenMuseum%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "History Museum", id: "histmus", key: "HistoryMuseum%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Performing Arts", id: "perfarts", key: "PerformingArts%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Dance", id: "dance", key: "Dance%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Ballet", id: "ballet", key: "Ballet%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Theater", id: "theater", key: "Theater%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Opera", id: "opera", key: "Opera%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Symphony Orchestra", id: "symph", key: "SymphonyOrchestra%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Media", id: "media", key: "Media%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Film", id: "film", key: "Film%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Television", id: "tv", key: "Television%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Publishing", id: "pub", key: "Publishing%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Radio", id: "radio", key: "Radio%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            //{name: "ArtMuseumRevenue", id: "artrevenue", key: "ArtMuseumRevenue", format: "+,"},
+            //{name: "ArtMuseumAssets", id: "artassets", key: "ArtMuseumAssets", format: "+,"},
+            //{name: "ArtMuseumGovtGrants", id: "artgov", key: "ArtMuseumGovtGrants", format: "+,"},
+            //{name: "ArtMuseumContributions", id: "artcont", key: "ArtMuseumContributions", format: "+,"},
+
+          ],
+          years1 = ["Expenses", "Revenue","Assets","GovtGrants","Contributions"],
+          fieldsById1 = d3.nest()
+            .key(function(d) { return d.id; })
+            .rollup(function(d) { return d[0]; })
+            .map(fields1),
+          field1 = fields1[0],
+          year1 = years1[0],
+          colors1 = colorbrewer.OrRd[3] //.reverse()
+            .map(function(rgb) { return d3.hsl(rgb); });
+            
+      //var body1 = d3.select("body"),
+      //    stat1 = d3.select("#status1");
+
+      var fieldSelect1 = d3.select("#field1")
+        .on("change", function(e) {
+          field1 = fields1[this.selectedIndex];
+          maphash="#" + [field1.id, year1].join("/");
+          console.log(maphash)
+          parseHash1()
+          //location.hash = "#" + [field1.id, year1].join("/");
+        });
+
+      fieldSelect1.selectAll("option")
+        .data(fields1)
+        .enter()
+        .append("option")
+          .attr("value", function(d) { return d.id; })
+          .text(function(d) { return d.name; });
+
+      var yearSelect1 = d3.select("#year1")
+        .on("change", function(e) {
+          year1 = years1[this.selectedIndex];
+            maphash = "#" + [field1.id, year1].join("/");
+            parseHash1()
+            console.log(maphash)
+        });
+
+      yearSelect1.selectAll("option")
+        .data(years1)
+        .enter()
+        .append("option")
+          .attr("value", function(y) { return y; })
+          .text(function(y) { return y; })
+
+      var map1 = d3.select("#map1"),
+          zoom1 = d3.behavior.zoom()
+            .translate([-38, 32])
+            .scale(.94)
+            .scaleExtent([0.5, 10.0])
+            .on("zoom", updateZoom1),
+          layer1 = map1.append("g")
+            .attr("id", "layer"),
+          states1 = layer1.append("g")
+            .attr("id", "states")
+            .selectAll("path");
+      // map.call(zoom);
+      updateZoom1();
+
+      function updateZoom1() {
+        var scale1 = zoom1.scale();
+        layer1.attr("transform",
+          "translate(" + zoom1.translate() + ") " +
+          "scale(" + [scale1, scale1] + ")");
+      }
+
+      var proj1 = d3.geo.albersUsa(),
+          topology1,
+          geometries1,
+          rawData1,
+          dataById1 = {},
+          carto1 = d3.cartogram()
+            .projection(proj1)
+            .properties(function(d) {
+              return dataById1[d.id];
+            })
+            .value(function(d) {
+              return +d.properties[field1];
+            });
+
+
+      var segmentized1 = location.search === "?segmentized",
+          url1 = ["data",
+            segmentized ? "us-states-segmentized.topojson" : "us-states.topojson"
+          ].join("/");
+
+      d3.json(url1, function(topo) {
+        topology1 = topo;
+        geometries1 = topology1.objects.states.geometries;
+        d3.csv("data/nst_2011-new.csv", function(data1) {
+          rawData1 = data1;
+          dataById1 = d3.nest()
+            .key(function(d) { return d.NAME; })
+            .rollup(function(d) { return d[0]; })
+            .map(data1);
+          init1();
+        });
+      });
+
+      function init1() {
+        var features1 = carto1.features(topology1, geometries1),
+            path1 = d3.geo.path()
+              .projection(proj1);
+              //LMS: Over here we have the raw coordinates in the feature vector.
+        states1 = states1.data(features1)
+          .enter()
+          .append("path")
+            .attr("class", "state")
+            .attr("id", function(d) {
+              return d.properties.NAME;
+            })
+            .attr("fill", "#fafafa")
+            .attr("d", path1);
+        states1.append("title");
+         maphash = "#" + [field1.id, year1].join("/");
+        parseHash1();
+      }
+
+      function reset1() {
+
+        var features1 = carto1.features(topology1, geometries1),
+            path1 = d3.geo.path()
+              .projection(proj1);
+        states1.data(features1)
+          .transition()
+            .duration(750)
+            .ease("linear")
+            .attr("fill", "#fafafa")
+            .attr("d", path1);
+
+        states1.select("title")
+          .text(function(d) {
+            return d.properties.NAME;
+          });
+      }
+
+      function update1() {
+        var start1 = Date.now();
+
+        var key1 = field1.key.replace("%s", year1),
+            fmt = (typeof field1.format === "function")
+              ? field1.format
+              : d3.format(field1.format || ","),
+            value = function(d) {
+              return +d.properties[key1];
+            },
+            values1 = states1.data()
+              .map(value)
+              .filter(function(n) {
+                return !isNaN(n);
+              })
+              .sort(d3.ascending),
+            lo1 = values1[0],
+            hi1 = values1[values1.length - 1];
+        
+        var color1 = d3.scale.linear()
+          .range(colors1)
+          .domain(lo1 < 0
+            ? [lo1, 0, hi1]
+            : [lo1, d3.mean(values1), hi1]);
+
+        // normalize the scale to positive numbers
+        var scale1 = d3.scale.linear()
+          .domain([lo1, hi1])
+          .range([1, 1000]);
+        // tell the cartogram to use the scaled values
+        carto1.value(function(d) {
+                     console.log(scale1(value(d)))
+          return scale1(value(d));
+        });
+
+        
+        
+        // add the legend now
+        //Version 1
+        colorbar1 = Colorbar()
+            .origin([0,0])
+            .thickness(20)
+            .barlength(1000)
+            .margin({top: 5, right: 30, bottom: 60, left: 0})
+            .orient("horizontal")
+            .scale(color1)
+            
+
+        placeholder1 = "#colorbar-here1"
+
+        colorbarObject1 = d3.select(placeholder1)
+            .call(colorbar1)
+        //Append a defs (for definition) element to your SVG
+        svg1 = d3.select("#colorbar-here1")
+           
+        var defs1 = svg1.append("defs");
+
+        //Append a linearGradient element to the defs and give it a unique id
+        var linearGradient1 = defs1.append("linearGradient")
+            .attr("id", "colorbar-here1");
+            
+        linearGradient1.selectAll("stop")
+        .data( color1.range() )
+        .enter().append("stop")
+        .attr("offset", function(d,i) { return i/(color1.range().length-1); })
+        .attr("stop-color", function(d) { return d; });
+              
+         svg1.append("rect")
+         .attr("width", 300)
+         .attr("height", 20)
+         .style("fill", "url(#colorbar-here1)");
+         
+         
+            
+        // generate the new features, pre-projected
+        var features1 = carto1(topology1, geometries1).features;
+        // update the data
+        //console.log(features)
+
+        states1.data(features1)
+          .select("title")
+            .text(function(d) {
+              return [d.properties.NAME, fmt(value(d))].join(": ");
+            });
+
+        states1.transition()
+          .duration(750)
+          .ease("linear")
+          .attr("fill", function(d) {
+            return color1(value(d));
+          })
+          .attr("d", carto.path);
+
+        var delta1 = (Date.now() - start1) / 1000;
+        //stat.text(["calculated in", delta.toFixed(1), "seconds"].join(" "));
+        //body.classed("updating", false);
+
+      }
+
+      var deferredUpdate1 = (function() {
+        var timeout1;
+        return function() {
+          var args1 = arguments;
+          clearTimeout(timeout1);
+          return timeout1 = setTimeout(function() {
+            update1.apply(null, arguments);
+          }, 10);
+        };
+      })();
+
+      /*var hashish1 = d3.selectAll("a.hashish")
+        .datum(function() {
+          return this.href;
+        });*/
+
+      function parseHash1() {
+        var parts1 = maphash.substr(1).split("/"),
+            desiredFieldId1 = parts1[0],
+            desiredYear1 = parts1[1];
+
+        field1 = fieldsById1[desiredFieldId1] || fields1[0];
+        year1 = (years1.indexOf(desiredYear1) > -1) ? desiredYear1 : years1[0];
+
+        fieldSelect1.property("selectedIndex", fields1.indexOf(field1));
+
+        if (field1.id === "none") {
+
+          yearSelect1.attr("disabled", "disabled");
+          reset1();
+
+        } else {
+
+          if (field1.years1) {
+            if (field1.years1.indexOf(year1) === -1) {
+              year1 = field1.years1[0];
+            }
+            yearSelect1.selectAll("option")
+              .attr("disabled", function(y) {
+                return (field1.years1.indexOf(y) === -1) ? "disabled" : null;
+              });
+          } else {
+            yearSelect1.selectAll("option")
+              .attr("disabled", null);
+          }
+
+          yearSelect1
+            .property("selectedIndex", years1.indexOf(year1))
+            .attr("disabled", null);
+
+          deferredUpdate1();
+          maphash.replace("#" + [field1.id, year1].join("/"));
+
+          /*hashish1.attr("href", function(href) {
+            return maphash;
+          });*/
+        }
+      }
+
+
     
-  </body>
+    
+    </script>
+
+    </body>
+
+  
+  
+ 
+<div id="about">
+  <h2>About</h2>
+  <p> Created by the BarabasiLab based on previous code developed Shawn Allen at Stamen.</p>
+  <!--<p><a href="cartogram.js">cartogram.js</a> is a JavaScript implementation of
+  <a href="http://lambert.nico.free.fr/tp/biblio/Dougeniketal1985.pdf">an algoritm to construct continuous area cartograms</a>,
+  by James A. Dougenik, Nicholas R. Chrisman and Duane R. Niemeyer,
+  &copy;1985 by the Association of American Geographers.
+  This example combines
+  <a href="http://github.com/mbostock/topojson">TopoJSON</a>-encoded
+  boundaries of the United States from
+  <a href="http://www.naturalearthdata.com/downloads/110m-cultural-vectors/">Natural Earth</a>
+  with
+  <a href="http://www.census.gov/popest/data/state/totals/2011/">2011 US Census population estimates</a>
+  to size each state proportionally.</p>
+  
+  <p>There&rsquo;s also a
+  <a class="hashish" href="?segmentized">segmentized topology</a>,
+  which distorts the shapes more fluidly than the
+  <a class="hashish" href="?">original</a>.</p>
+
+  <p>Designed and built by <a href="http://stamen.com/studio/shawn">Shawn Allen</a> at
+  <a href="http://stamen.com">Stamen</a>. But
+  <a href="http://d3js.org">d3.js</a> does most of the heavy lifting;
+  colors by <a href="http://colorbrewer2.org">colorbrewer</a>.</p>-->
+</div>
+
+<!--<a href="https://github.com/shawnbot/d3-cartogram/"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>-->
+</div>
+  
 </html>
