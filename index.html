@@ -129,7 +129,7 @@
       <h1>Arts &amp; Culture Cartograms</h1>
       <form>
         <p>
-          <label>Scale by <select id="field"></select></label><label> <select id="year"></select></label>
+          <label>Scale by <select id="field"></select></label><label> <select id="year"></select></label>  Normalized by population? <input type="checkbox" id="popnorm" value="PopNorm">
 
           <span id="status"></span>
         </p>
@@ -161,9 +161,8 @@
           fields = [
              //{name: "Census Population", id: "censuspop", key: "CENSUS%sPOP", years: ["2010","2011"]},
             // {name: "Estimate Base", id: "censuspop", key: "ESTIMATESBASE%d", years: [2010]},
-            {name: "Population Estimate", id: "popest", key: "POPESTIMATE2010", years:[]},
-            {name: "All Arts&Culture", id: "allart", key: "All%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-
+            {name: "Population Estimate", id: "popest", key: "POPESTIMATE2011", years:[]},
+                {name: "All Arts&Culture", id: "allart", key: "All%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
             {name: "All Museum", id: "allmus", key: "Museum%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
             {name: "Art Museum", id: "artmus", key: "ArtMuseum%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
             {name: "Children Museum", id: "childmus", key: "ChildrenMuseum%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
@@ -179,10 +178,6 @@
             {name: "Television", id: "tv", key: "Television%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
             {name: "Publishing", id: "pub", key: "Publishing%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
             {name: "Radio", id: "radio", key: "Radio%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            //{name: "ArtMuseumRevenue", id: "artrevenue", key: "ArtMuseumRevenue", format: "+,"},
-            //{name: "ArtMuseumAssets", id: "artassets", key: "ArtMuseumAssets", format: "+,"},
-            //{name: "ArtMuseumGovtGrants", id: "artgov", key: "ArtMuseumGovtGrants", format: "+,"},
-            //{name: "ArtMuseumContributions", id: "artcont", key: "ArtMuseumContributions", format: "+,"},
 
           ],
           years = ["Expenses", "Revenue","Assets","GovtGrants","Contributions"],
@@ -203,7 +198,8 @@
           field = fields[this.selectedIndex];
           location.hash = "#" + [field.id, year].join("/");
         });
-
+        
+          
       fieldSelect.selectAll("option")
         .data(fields)
         .enter()
@@ -226,8 +222,18 @@
         .append("option")
           .attr("value", function(y) { return y; })
           .text(function(y) { return y; })
+          
+      var normSelect = d3.select("#popnorm")
+        .on("change", function(e) {
+            if (d3.select('#popnorm').property("checked")){
+            popnorm = this.value;}
+            else{popnorm=""}
+          location.hash = "#" + [field.id, year,popnorm].join("/");
+          console.log(location.hash )
 
-      var map = d3.select("#map"),
+        });
+
+        var map = d3.select("#map"),
           zoom = d3.behavior.zoom()
             .translate([-38, 32])
             .scale(.94)
@@ -451,10 +457,12 @@
         var parts = location.hash.substr(1).split("/"),
             desiredFieldId = parts[0],
             desiredYear = parts[1];
+            desiredNorm=parts[2];
 
         field = fieldsById[desiredFieldId] || fields[0];
         year = (years.indexOf(desiredYear) > -1) ? desiredYear : years[0];
-
+        popnorm=desiredNorm;
+        
         fieldSelect.property("selectedIndex", fields.indexOf(field));
 
         if (field.id === "none") {
@@ -482,7 +490,7 @@
             .attr("disabled", null);
 
           deferredUpdate();
-          location.replace("#" + [field.id, year].join("/"));
+          location.replace("#" + [field.id, year,popnorm].join("/"));
 
           hashish.attr("href", function(href) {
             return href + location.hash;
@@ -575,7 +583,7 @@
         .on("change", function(e) {
           field1 = fields1[this.selectedIndex];
           maphash="#" + [field1.id, year1].join("/");
-          console.log(maphash)
+          //console.log(maphash)
           parseHash1()
           //location.hash = "#" + [field1.id, year1].join("/");
         });
@@ -592,7 +600,7 @@
           year1 = years1[this.selectedIndex];
             maphash = "#" + [field1.id, year1].join("/");
             parseHash1()
-            console.log(maphash)
+            //console.log(maphash)
         });
 
       yearSelect1.selectAll("option")
@@ -724,7 +732,7 @@
           .range([1, 1000]);
         // tell the cartogram to use the scaled values
         carto1.value(function(d) {
-                     console.log(scale1(value(d)))
+                     //console.log(scale1(value(d)))
           return scale1(value(d));
         });
 
