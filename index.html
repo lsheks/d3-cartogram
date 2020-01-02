@@ -162,22 +162,22 @@
              //{name: "Census Population", id: "censuspop", key: "CENSUS%sPOP", years: ["2010","2011"]},
             // {name: "Estimate Base", id: "censuspop", key: "ESTIMATESBASE%d", years: [2010]},
             {name: "Population Estimate", id: "popest", key: "POPESTIMATE2011", years:[]},
-                {name: "All Arts&Culture", id: "allart", key: "All%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "All Museum", id: "allmus", key: "Museum%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Art Museum", id: "artmus", key: "ArtMuseum%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Children Museum", id: "childmus", key: "ChildrenMuseum%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "History Museum", id: "histmus", key: "HistoryMuseum%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Performing Arts", id: "perfarts", key: "PerformingArts%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Dance", id: "dance", key: "Dance%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Ballet", id: "ballet", key: "Ballet%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Theater", id: "theater", key: "Theater%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Opera", id: "opera", key: "Opera%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Symphony Orchestra", id: "symph", key: "SymphonyOrchestra%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Media", id: "media", key: "Media%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Film", id: "film", key: "Film%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Television", id: "tv", key: "Television%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Publishing", id: "pub", key: "Publishing%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Radio", id: "radio", key: "Radio%s", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+                    {name: "All Arts&Culture", id: "allart", key: "All%s%p", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "All Museum", id: "allmus", key: "Museum%s%p", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Art Museum", id: "artmus", key: "ArtMuseum%s%p", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Children Museum", id: "childmus", key: "ChildrenMuseum%s%p", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "History Museum", id: "histmus", key: "HistoryMuseum%s%p", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Performing Arts", id: "perfarts", key: "PerformingArts%s%p", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Dance", id: "dance", key: "Dance%s%p", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Ballet", id: "ballet", key: "Ballet%s%p", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Theater", id: "theater", key: "Theater%s%p", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Opera", id: "opera", key: "Opera%s%p", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Symphony Orchestra", id: "symph", key: "SymphonyOrchestra%s%p", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Media", id: "media", key: "Media%s%p", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Film", id: "film", key: "Film%s%p", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Television", id: "tv", key: "Television%s%p", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Publishing", id: "pub", key: "Publishing%s%p", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Radio", id: "radio", key: "Radio%s%p", years: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
 
           ],
           years = ["Expenses", "Revenue","Assets","GovtGrants","Contributions"],
@@ -196,7 +196,7 @@
       var fieldSelect = d3.select("#field")
         .on("change", function(e) {
           field = fields[this.selectedIndex];
-          location.hash = "#" + [field.id, year].join("/");
+          location.hash = "#" + [field.id, year, popnorm].join("/");
         });
         
           
@@ -212,7 +212,7 @@
           year = years[this.selectedIndex];
             //console.log(year);
 
-          location.hash = "#" + [field.id, year].join("/");
+          location.hash = "#" + [field.id, year, popnorm].join("/");
             //console.log(location.hash)
         });
 
@@ -340,7 +340,7 @@
         var start = Date.now();
         body.classed("updating", true);
 
-        var key = field.key.replace("%s", year),
+        var key = field.key.replace("%s", year).replace("%p", popnorm),
             fmt = (typeof field.format === "function")
               ? field.format
               : d3.format(field.format || ","),
