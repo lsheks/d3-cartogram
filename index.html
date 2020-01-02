@@ -512,7 +512,7 @@
     <div id="container1">
       <form>
         <p>
-          <label>Scale by <select id="field1"></select></label><label> <select id="year1"></select></label>
+          <label>Scale by <select id="field1"></select></label><label> <select id="year1"></select></label> Normalized by population? <input type="checkbox" id="popnorm1" value="PopNorm">
           <span id="status1"></span>
         </p>
       </form>
@@ -544,23 +544,23 @@
              //{name: "Census Population", id: "censuspop", key: "CENSUS%sPOP", years: ["2010","2011"]},
             // {name: "Estimate Base", id: "censuspop", key: "ESTIMATESBASE%d", years: [2010]},
             {name: "Population Estimate", id: "popest", key: "POPESTIMATE2010", years1:[]},
-            {name: "All Arts&Culture", id: "allart", key: "All%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "All Arts&Culture", id: "allart", key: "All%s%p", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
 
-            {name: "All Museum", id: "allmus", key: "Museum%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Art Museum", id: "artmus", key: "ArtMuseum%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Children Museum", id: "childmus", key: "ChildrenMuseum%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "History Museum", id: "histmus", key: "HistoryMuseum%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Performing Arts", id: "perfarts", key: "PerformingArts%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Dance", id: "dance", key: "Dance%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Ballet", id: "ballet", key: "Ballet%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Theater", id: "theater", key: "Theater%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Opera", id: "opera", key: "Opera%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Symphony Orchestra", id: "symph", key: "SymphonyOrchestra%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Media", id: "media", key: "Media%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Film", id: "film", key: "Film%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Television", id: "tv", key: "Television%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Publishing", id: "pub", key: "Publishing%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
-            {name: "Radio", id: "radio", key: "Radio%s", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "All Museum", id: "allmus", key: "Museum%s%p", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Art Museum", id: "artmus", key: "ArtMuseum%s%p", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Children Museum", id: "childmus", key: "ChildrenMuseum%s%p", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "History Museum", id: "histmus", key: "HistoryMuseum%s%p", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Performing Arts", id: "perfarts", key: "PerformingArts%s%p", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Dance", id: "dance", key: "Dance%s%p", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Ballet", id: "ballet", key: "Ballet%s%p", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Theater", id: "theater", key: "Theater%s%p", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Opera", id: "opera", key: "Opera%s%p", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Symphony Orchestra", id: "symph", key: "SymphonyOrchestra%s%p", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Media", id: "media", key: "Media%s%p", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Film", id: "film", key: "Film%s%p", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Television", id: "tv", key: "Television%s%p", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Publishing", id: "pub", key: "Publishing%s%p", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
+            {name: "Radio", id: "radio", key: "Radio%s%p", years1: ["Expenses", "Revenue","Assets","GovtGrants","Contributions"]},
             //{name: "ArtMuseumRevenue", id: "artrevenue", key: "ArtMuseumRevenue", format: "+,"},
             //{name: "ArtMuseumAssets", id: "artassets", key: "ArtMuseumAssets", format: "+,"},
             //{name: "ArtMuseumGovtGrants", id: "artgov", key: "ArtMuseumGovtGrants", format: "+,"},
@@ -574,6 +574,7 @@
             .map(fields1),
           field1 = fields1[0],
           year1 = years1[0],
+          popnorm1="",
           colors1 = colorbrewer.OrRd[3] //.reverse()
             .map(function(rgb) { return d3.hsl(rgb); });
             
@@ -583,7 +584,7 @@
       var fieldSelect1 = d3.select("#field1")
         .on("change", function(e) {
           field1 = fields1[this.selectedIndex];
-          maphash="#" + [field1.id, year1].join("/");
+          maphash="#" + [field1.id, year1,popnorm1].join("/");
           //console.log(maphash)
           parseHash1()
           //location.hash = "#" + [field1.id, year1].join("/");
@@ -599,7 +600,7 @@
       var yearSelect1 = d3.select("#year1")
         .on("change", function(e) {
           year1 = years1[this.selectedIndex];
-            maphash = "#" + [field1.id, year1].join("/");
+            maphash = "#" + [field1.id, year1, popnorm1].join("/");
             parseHash1()
             //console.log(maphash)
         });
@@ -611,6 +612,17 @@
           .attr("value", function(y) { return y; })
           .text(function(y) { return y; })
 
+      var normSelect1 = d3.select("#popnorm1")
+        .on("change", function(e) {
+            if (d3.select('#popnorm1').property("checked")){
+            popnorm1 = this.value;}
+            else{popnorm1=""}
+          maphash = "#" + [field1.id, year1, popnorm1].join("/");
+          parseHash1()
+
+
+        });
+          
       var map1 = d3.select("#map1"),
           zoom1 = d3.behavior.zoom()
             .translate([-38, 32])
@@ -705,7 +717,7 @@
       function update1() {
         var start1 = Date.now();
 
-        var key1 = field1.key.replace("%s", year1),
+        var key1 = field1.key.replace("%s", year1).replace("%p", popnorm1),
             fmt = (typeof field1.format === "function")
               ? field1.format
               : d3.format(field1.format || ","),
@@ -821,10 +833,11 @@
         var parts1 = maphash.substr(1).split("/"),
             desiredFieldId1 = parts1[0],
             desiredYear1 = parts1[1];
+            desiredpopnorm1=parts1[2]
 
         field1 = fieldsById1[desiredFieldId1] || fields1[0];
         year1 = (years1.indexOf(desiredYear1) > -1) ? desiredYear1 : years1[0];
-
+        popnorm1=desiredpopnorm1;
         fieldSelect1.property("selectedIndex", fields1.indexOf(field1));
 
         if (field1.id === "none") {
@@ -852,8 +865,7 @@
             .attr("disabled", null);
 
           deferredUpdate1();
-          maphash.replace("#" + [field1.id, year1].join("/"));
-
+          maphash.replace("#" + [field1.id, year1, popnorm1].join("/"));
           /*hashish1.attr("href", function(href) {
             return maphash;
           });*/
